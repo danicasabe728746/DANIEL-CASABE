@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daniel Casabé — Director & Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&family=Karla:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --black: #080808; --white: #e8e4dc; --line: rgba(232,228,220,0.06); }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'Karla', sans-serif; overflow-x: hidden; }
+
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 1.75rem 2.5rem; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--black); z-index: 10; }
+  .logo { font-family: 'Cormorant', serif; font-size: 1.2rem; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white); }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-link { font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white); text-decoration: none; transition: opacity 0.25s; }
+  .nav-link:hover { opacity: 0.6; }
+  .nav-about { font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white); border: 1px solid rgba(232,228,220,0.35); padding: 0.4rem 1rem; text-decoration: none; transition: all 0.25s; cursor: pointer; background: none; font-family: 'Karla', sans-serif; }
+  .nav-about:hover { opacity: 0.6; }
+
+  .hero { padding: 5rem 2.5rem 3.5rem; display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 1px solid var(--line); min-height: 35vh; }
+  .hero-name { font-family: 'Cormorant', serif; font-size: clamp(2rem, 4.5vw, 4rem); font-weight: 300; line-height: 1; letter-spacing: -0.01em; color: var(--white); }
+  .hero-roles { font-size: 0.9rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--white); line-height: 2.4; text-align: right; padding-bottom: 0.25rem; }
+
+  .section-header { padding: 2.5rem 2.5rem 0; display: flex; align-items: center; gap: 1.5rem; }
+  .section-title { font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--white); white-space: nowrap; }
+  .section-line { flex: 1; height: 1px; background: var(--line); }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); margin-top: 1.5rem; }
+  .cell { background: var(--black); position: relative; overflow: hidden; cursor: pointer; }
+  .cell-inner { width: 100%; padding-bottom: 60%; position: relative; overflow: hidden; }
+  .cell-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .cell:hover .cell-bg { transform: scale(1.05); }
+  .cell-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.35s; background: rgba(8,8,8,0.45); }
+  .cell:hover .cell-overlay { opacity: 1; }
+  .play-ring { width: 48px; height: 48px; border: 1px solid rgba(232,228,220,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .play-tri { width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 14px; border-color: transparent transparent transparent rgba(232,228,220,0.9); margin-left: 3px; }
+  .cell-info { padding: 0.75rem 1rem 1rem; border-top: 1px solid var(--line); }
+  .cell-title { font-family: 'Cormorant', serif; font-size: 1rem; font-weight: 300; color: rgba(232,228,220,0.75); line-height: 1.3; }
+
+  .c0{background-color:#0d0d0d}.c1{background-color:#0a0c0e}.c2{background-color:#0e0d0b}
+  .c3{background-color:#0b0e0c}.c4{background-color:#0e0b0d}.c5{background-color:#0c0c0e}
+  .c6{background-color:#0e0c0b}.c7{background-color:#0b0d0e}.c8{background-color:#0d0b0b}
+  .c9{background-color:#0c0d0e}.c10{background-color:#0e0c0d}.c11{background-color:#0b0b0e}
+  .c12{background-color:#0d0e0b}.c13{background-color:#0e0d0d}
+
+  .coming { grid-column: span 3; padding: 3rem 2.5rem; font-family: 'Cormorant', serif; font-style: italic; font-size: 1rem; color: rgba(232,228,220,0.12); }
+  .lang-switch { display: flex; gap: 0.5rem; align-items: center; }
+  .lang-btn { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(232,228,220,0.35); background: none; border: none; cursor: pointer; font-family: 'Karla', sans-serif; padding: 0.2rem 0.4rem; transition: color 0.25s; }
+  .lang-btn.active { color: var(--white); border-bottom: 1px solid rgba(232,228,220,0.5); }
+  .lang-btn:hover { color: var(--white); }
+  .lang-sep { color: rgba(232,228,220,0.15); font-size: 0.65rem; }
+
+  /* EDITING LIST */
+  .editing-list { padding: 2rem 2.5rem 0; max-width: 900px; }
+  .editing-item { display: flex; align-items: center; gap: 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+  .editing-poster { width: 42px; height: 62px; object-fit: cover; flex-shrink: 0; background: #111; }
+  .editing-info { flex: 1; }
+  .editing-title { font-family: 'Cormorant', serif; font-size: 1rem; color: var(--white); font-weight: 300; }
+  .editing-meta { font-size: 0.65rem; letter-spacing: 0.1em; color: rgba(232,228,220,0.35); margin-top: 0.2rem; }
+  .grid-vertical { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); margin-top: 1.5rem; max-width: 900px; margin-left: 0; margin-right: auto; }
+  .grid-vertical .cell-inner { width: 100%; padding-bottom: 148%; position: relative; overflow: hidden; }
+
+  /* VIDEO MODAL */
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(4,4,4,0.97); z-index: 100; align-items: center; justify-content: center; flex-direction: column; padding: 2rem; }
+  .modal-backdrop.open { display: flex; }
+  .modal-player { width: 100%; max-width: 900px; aspect-ratio: 16/9; background: #0f0f0f; border: 1px solid rgba(232,228,220,0.08); position: relative; display: flex; align-items: center; justify-content: center; }
+  .modal-iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; display: none; }
+  .modal-iframe.loaded { display: block; }
+  .modal-placeholder { font-family: 'Cormorant', serif; font-style: italic; font-size: 1rem; color: rgba(232,228,220,0.15); }
+  .modal-controls { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; }
+  .modal-title-label { font-family: 'Cormorant', serif; font-size: 0.85rem; color: rgba(232,228,220,0.35); font-style: italic; }
+  .modal-close { font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--white); cursor: pointer; border: none; background: none; font-family: 'Karla', sans-serif; transition: opacity 0.3s; padding: 0; }
+  .modal-close:hover { opacity: 0.6; }
+  .modal-nav { display: flex; gap: 1.5rem; }
+  .modal-nav button { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white); cursor: pointer; border: none; background: none; font-family: 'Karla', sans-serif; transition: opacity 0.3s; padding: 0; }
+  .modal-nav button:hover { opacity: 0.6; }
+
+  /* ABOUT OVERLAY */
+  .about-overlay { display: none; position: fixed; inset: 0; background: rgba(4,4,4,0.97); z-index: 200; align-items: center; justify-content: center; padding: 3rem; overflow-y: auto; }
+  .about-overlay.open { display: flex; }
+  .about-box { max-width: 660px; width: 100%; }
+  .about-close { font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--white); background: none; border: none; cursor: pointer; font-family: 'Karla', sans-serif; margin-bottom: 3rem; transition: opacity 0.3s; padding: 0; display: block; }
+  .about-close:hover { opacity: 0.6; }
+  .about-name-big { font-family: 'Cormorant', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 300; line-height: 1; margin-bottom: 0.5rem; }
+  .about-tagline { font-family: 'Cormorant', serif; font-style: italic; font-size: 1.05rem; color: rgba(232,228,220,0.35); margin-bottom: 2.5rem; }
+  .about-text { font-family: 'Cormorant', serif; font-size: 1.1rem; font-weight: 300; line-height: 1.85; color: rgba(232,228,220,0.6); margin-bottom: 1.25rem; }
+  .about-text em { font-style: italic; color: rgba(232,228,220,0.9); }
+  .about-imdb { display: inline-flex; align-items: center; gap: 0.75rem; margin-top: 2rem; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(232,228,220,0.3); border: 1px solid rgba(232,228,220,0.1); padding: 0.6rem 1.25rem; text-decoration: none; transition: all 0.25s; }
+  .about-imdb:hover { color: var(--white); border-color: rgba(232,228,220,0.35); }
+  .imdb-badge { background: #f5c518; color: #000; font-weight: 700; font-size: 0.65rem; padding: 0.1rem 0.3rem; font-family: 'Karla', sans-serif; letter-spacing: 0; }
+
+  .bottom-bar { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2.5rem; border-top: 1px solid var(--line); margin-top: 4rem; flex-wrap: wrap; gap: 1rem; }
+  .bottom-contact { display: flex; gap: 2rem; align-items: center; flex-wrap: wrap; }
+  .bottom-link { font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white); text-decoration: none; transition: opacity 0.3s; }
+  .bottom-link:hover { opacity: 0.6; }
+  .bottom-tag { font-family: 'Cormorant', serif; font-style: italic; font-size: 0.9rem; color: rgba(232,228,220,0.2); }
+
+  @media (max-width: 768px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .hero { flex-direction: column; gap: 2rem; min-height: auto; padding: 3rem 1.5rem 2rem; }
+    .hero-roles { text-align: left; }
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .bottom-bar { flex-direction: column; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Daniel Casabé</div>
+  <div class="nav-links">
+    <div class="lang-switch">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" id="btn-es" onclick="setLang('es')">ES</button>
+    </div>
+    <button class="nav-about" id="btn-about" onclick="openAbout()">About</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-name">Daniel Casabé</div>
+  <div class="hero-roles">Director<br>Editor</div>
+</div>
+
+<div id="cine" style="margin-top:4rem;">
+  <div class="section-header"><span class="section-title" data-en="Film — Direction & Editing" data-es="Cine — Dirección y Montaje">Film — Direction & Editing</span><span class="section-line"></span></div>
+  <div class="grid-vertical" id="cine-grid"><div class="coming">Coming soon</div></div>
+
+  <!-- EDITING LIST -->
+  <div class="editing-list" id="editing-list" style="margin-top:2rem;">
+    <div style="font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(232,228,220,0.25);margin-bottom:1rem;" id="editing-label">Editor</div>
+    <div class="editing-item">
+      <img class="editing-poster" src="https://danicasabe728746.github.io/danielcasabe/LA_ESTRELLA_QUE_PERDI.png" alt="">
+      <div class="editing-info">
+        <div class="editing-title">La estrella que perdí</div>
+        <div class="editing-meta">Editor · 2024</div>
+      </div>
+    </div>
+    <div class="editing-item">
+      <img class="editing-poster" src="https://danicasabe728746.github.io/danielcasabe/PARTE_DE_UNA_RELIGION.png" alt="">
+      <div class="editing-info">
+        <div class="editing-title">Parte de una religión</div>
+        <div class="editing-meta">Editor · TV Mini Series · 2021</div>
+      </div>
+    </div>
+    <div class="editing-item">
+      <img class="editing-poster" src="https://danicasabe728746.github.io/danielcasabe/ROMPIENTE.png" alt="">
+      <div class="editing-info">
+        <div class="editing-title">Rompiente</div>
+        <div class="editing-meta">Editor · 2020</div>
+      </div>
+    </div>
+    <div class="editing-item">
+      <img class="editing-poster" src="https://danicasabe728746.github.io/danielcasabe/ARTE_ARTE_ARTE.png" alt="">
+      <div class="editing-info">
+        <div class="editing-title">Arte arte arte: El partenón de los libros perdidos de Marta Minujin</div>
+        <div class="editing-meta">Editor · Short · 2018</div>
+      </div>
+    </div>
+    <div class="editing-item">
+      <img class="editing-poster" src="https://danicasabe728746.github.io/danielcasabe/AL_DESIERTO.png" alt="">
+      <div class="editing-info">
+        <div class="editing-title">Al Desierto</div>
+        <div class="editing-meta">Editor · 2017</div>
+      </div>
+    </div>
+    <div class="editing-item">
+      <img class="editing-poster" src="https://danicasabe728746.github.io/danielcasabe/LOS_QUE_VUELVEN.png" alt="">
+      <div class="editing-info">
+        <div class="editing-title">Los que vuelven</div>
+        <div class="editing-meta">Editor · 2020</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:1.5rem 2.5rem 0;">
+    <a style="display:inline-flex;align-items:center;gap:0.75rem;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(232,228,220,0.4);border:1px solid rgba(232,228,220,0.12);padding:0.5rem 1.1rem;text-decoration:none;transition:all 0.25s;font-family:'Karla',sans-serif;" href="https://www.imdb.com/name/nm1443935/" target="_blank" onmouseover="this.style.color='#e8e4dc';this.style.borderColor='rgba(232,228,220,0.4)'" onmouseout="this.style.color='rgba(232,228,220,0.4)';this.style.borderColor='rgba(232,228,220,0.12)'">
+      <span style="background:#f5c518;color:#000;font-weight:700;font-size:0.6rem;padding:0.1rem 0.3rem;font-family:'Karla',sans-serif;">IMDb</span>
+      <span data-en="Full profile" data-es="Ver perfil completo">Full profile</span>
+    </a>
+  </div>
+</div>
+
+<div id="publicidad" style="margin-top:4rem;">
+  <div class="section-header"><span class="section-title" data-en="Advertising" data-es="Publicidad">Advertising</span><span class="section-line"></span></div>
+  <div class="grid" id="publi-grid"></div>
+</div>
+
+<div class="bottom-bar">
+  <div class="bottom-contact">
+    <a href="mailto:dani.casabe@gmail.com" class="bottom-link">dani.casabe@gmail.com</a>
+    <a href="tel:+5491154090279" class="bottom-link">+54 9 11 5409 0279</a>
+    <a href="https://instagram.com/dani_casabe" target="_blank" class="bottom-link">@dani_casabe</a>
+  </div>
+  <div class="bottom-tag"></div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal-player">
+    <iframe class="modal-iframe" id="iframe" allowfullscreen allow="autoplay; fullscreen"></iframe>
+    <div class="modal-placeholder" id="placeholder">Loading...</div>
+  </div>
+  <div class="modal-controls">
+    <button class="modal-close" onclick="closeModal()">✕ close</button>
+    <div class="modal-title-label" id="modal-title"></div>
+    <div class="modal-nav">
+      <button onclick="navModal(-1)">← prev</button>
+      <button onclick="navModal(1)">next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT OVERLAY -->
+<div class="about-overlay" id="about-overlay">
+  <div class="about-box">
+    <button class="about-close" onclick="closeAbout()">✕ close</button>
+    <div class="about-name-big">Daniel Casabé</div>
+    <div class="about-tagline"></div>
+    <p class="about-text">Daniel Casabé was born in 1979 in Buenos Aires, Argentina. He attended the Nacional Buenos Aires high school and graduated as a Film Director from the Universidad del Cine (FUC), where he also taught Editing.</p>
+    <p class="about-text">He participated in the editing and post-production of feature films by directors such as Mariano Llinás, Alejandro Fadel, Santiago Mitre, Ana Katz and Pablo Trapero. He was part of the editing team of "Tetro" by Francis Ford Coppola, as assistant to Walter Murch.</p>
+    <p class="about-text">In 2011 he co-directed his first documentary feature with Edgardo Dieleke: Cracks de nácar, premiered at the XIII BAFICI and nominated for the Cóndor de Plata Award for best documentary of the year.</p>
+    <p class="about-text">In 2012 he co-directed La forma exacta de las islas, which premiered at the 27th Mar del Plata International Film Festival in the Latin American Competition, and received the FEISAL Award at the 34th Latin American Film Festival in Havana. In 2014 it was nominated for the Premios Sur as best documentary of the year.</p>
+    <p class="about-text">In 2023 he co-directed the fiction feature La Sudestada, based on the award-winning graphic novel by Juan Sáenz Valiente, which premiered in Official Competition at the International Film Festival Rotterdam, then won two official awards at the 24th BAFICI before its theatrical release across Argentina.</p>
+    <p class="about-text">Casabé also directed and edited the official Making Of of the series El Eternauta (Netflix, 2025), together with production company OBOL, delivering key promotional content for this landmark production.</p>
+    <p class="about-text">"Daniel Casabé is not merely a sensitive editor nor a director with an aesthetic eye. He is a filmmaker with comprehensive technical awareness, capable of intervening at every stage of the filmmaking process with precise, current and effective knowledge. His multiple training (editor, photographer, camera operator, post-producer) allows him to understand a film not as an isolated object, but as an organic system of visual, sonic and technical decisions that dialogue in every frame. In him, craft and poetry coexist, operational speed and narrative depth, technical knowledge and the ethics of time."</p>
+    <a class="about-imdb" href="https://www.imdb.com/name/nm1443935/" target="_blank">
+      <span class="imdb-badge">IMDb</span>
+      Full profile
+    </a>
+  </div>
+</div>
+
+<script>  /*
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  VIDEOS — agregar con { id: 'vimeoID', title: 'Título' }
+  Para YouTube usar { youtube: 'youtubeID', title: 'Título' }
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  */
+  const PUBLI = [
+    { id: '1190893270', title: 'Adidas · Bad Bunny BadBo' },
+    { id: '1190893998', title: 'Adidas · Bad Bunny Vaquero' },
+    { id: '1190897022', title: 'Adidas · Letters — Messi + Bad Bunny' },
+    { id: '1190897077', title: 'Adidas · Bad Bunny Global Vaquero' },
+    { id: '1190897127', title: 'Adidas · AFA Mundial 2026 Truco' },
+    { id: '1190897180', title: 'Adidas · AFA 50 Años Nueva Camiseta' },
+    { id: '1190897310', title: 'Adidas · Edison Chen' },
+    { id: '1190897350', title: 'Adidas · You Got This — Gabriel Jesus' },
+    { id: '1190897371', title: 'Adidas · Global Chen Black 2024' },
+    { id: '1190897396', title: 'Adidas · Boca H&A 2025 Argentina' },
+    { id: '1190897439', title: 'Adidas · Colombia Mundial 2026 Realismo Mágico' },
+    { id: '1190897467', title: 'Adidas · Copa America 2021' },
+    { id: '1190897490', title: 'Adidas · Colo-Colo Chile SPT' },
+    { id: '1190897502', title: 'Adidas · Colombia Copa America 2020' },
+    { id: '1190897524', title: 'Adidas · Maradona Boca' },
+    { id: '1190897538', title: 'Adidas · Forum Colombia' },
+    { id: '1190897567', title: 'Adidas · Forum Peru' },
+    { id: '1190897614', title: 'Adidas · River Boca Ready For Sport' },
+    { id: '1190897632', title: 'Adidas · Boca Ready For Sport' },
+    { id: '1190897642', title: 'Adidas · Forum Mexico' },
+    { id: '1191000595', title: 'Modo · Mejor con Modo 2025' },
+    { id: '1191006814', title: 'Mercado Libre Chile · Comprar Online' },
+    { id: '1191006863', title: 'Mercado Libre Chile · Invierno' },
+    { id: '1191006904', title: 'Mercado Libre Chile · Cyber' },
+  ];
+
+  const CINE = [
+    { id: '1191398977', title: 'La Sudestada — Dir. Daniel Casabé & Edgardo Dieleke · 2023', poster: 'https://danicasabe728746.github.io/danielcasabe/img:001%20LA%20SUDESTADA%202023.jpg' },
+    { id: '1191398975', title: 'La Forma Exacta de las Islas — Dir. Daniel Casabé & Edgardo Dieleke · 2012', poster: 'https://danicasabe728746.github.io/danielcasabe/img:002%20LA%20FORMA%20EXACTA%20DE%20LAS%20ISLAS%202014.jpg' },
+    { id: '1191398974', title: 'Cracks de Nácar — Dir. Daniel Casabé & Edgardo Dieleke · 2011', poster: 'https://danicasabe728746.github.io/danielcasabe/img:003%20CRACKS%20DE%20NACAR%202012.jpg' },
+    { id: '1190896723', title: 'Netflix · El Eternauta — Adapting the Eternaut · 2025' },
+    { id: '1190896788', title: 'Netflix · El Eternauta — Building the Apocalypse · 2025' },
+    { id: '1190896898', title: 'Netflix · El Eternauta — The Collective Hero · 2025' },
+  ];
+
+  /* ━━ No tocar abajo ━━ */
+  let currentList = [];
+  let currentIdx = 0;
+
+  function buildGrid(list, containerId, vertical) {
+    const grid = document.getElementById(containerId);
+    if (!list.length) return;
+    grid.innerHTML = '';
+    if (vertical) grid.className = 'grid-vertical';
+    list.forEach((item, i) => {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.innerHTML = `
+        <div class="cell-inner">
+          <div class="cell-bg c${i % 14}" id="bg-${containerId}-${i}"></div>
+          <div class="cell-overlay"><div class="play-ring"><div class="play-tri"></div></div></div>
+        </div>
+        <div class="cell-info"><div class="cell-title">${item.title}</div></div>`;
+      cell.onclick = () => openModal(list, i);
+      grid.appendChild(cell);
+    });
+    loadThumbnails(list, containerId);
+  }
+
+  async function loadThumbnails(list, containerId) {
+    list.forEach(async (item, i) => {
+      const bg = document.getElementById(`bg-${containerId}-${i}`);
+      if (!bg) return;
+      if (item.poster) {
+        bg.style.backgroundImage = `url(${item.poster})`;
+        bg.style.backgroundSize = 'cover';
+        return;
+      }
+      if (!item.id) return;
+      try {
+        const res = await fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${item.id}&width=640`);
+        const data = await res.json();
+        if (data.thumbnail_url) {
+          bg.style.backgroundImage = `url(${data.thumbnail_url})`;
+          bg.style.backgroundSize = 'cover';
+        }
+      } catch(e) {}
+    });
+  }
+
+  function getEmbed(item) {
+    if (item.youtube) return `https://www.youtube.com/embed/${item.youtube}?autoplay=1&rel=0&modestbranding=1`;
+    return `https://player.vimeo.com/video/${item.id}?autoplay=1&color=e8e4dc&byline=0&portrait=0&title=0`;
+  }
+
+  function openModal(list, idx) {
+    currentList = list; currentIdx = idx;
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderPlayer();
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+    const iframe = document.getElementById('iframe');
+    iframe.src = ''; iframe.classList.remove('loaded');
+  }
+
+  function navModal(dir) {
+    currentIdx = (currentIdx + dir + currentList.length) % currentList.length;
+    const iframe = document.getElementById('iframe');
+    iframe.src = ''; iframe.classList.remove('loaded');
+    renderPlayer();
+  }
+
+  function renderPlayer() {
+    const item = currentList[currentIdx];
+    const iframe = document.getElementById('iframe');
+    iframe.src = getEmbed(item);
+    iframe.classList.add('loaded');
+    document.getElementById('placeholder').style.display = 'none';
+    document.getElementById('modal-title').textContent = item.title;
+  }
+
+  function openAbout() { document.getElementById('about-overlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeAbout() { document.getElementById('about-overlay').classList.remove('open'); document.body.style.overflow = ''; }
+
+  // LANGUAGE SWITCHER
+  const translations = {
+    en: {
+      about: 'About',
+      close: '✕ close',
+      prev: '← prev',
+      next: 'next →',
+      editor: 'Editor',
+      heroRoles: 'Director<br>Editor',
+    },
+    es: {
+      about: 'Acerca',
+      close: '✕ cerrar',
+      prev: '← anterior',
+      next: 'siguiente →',
+      editor: 'Montajista',
+      heroRoles: 'Director<br>Montajista',
+    }
+  };
+
+  function setLang(lang) {
+    const t = translations[lang];
+    // Nav
+    document.getElementById('btn-about').textContent = t.about;
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+    // Hero
+    document.querySelector('.hero-roles').innerHTML = t.heroRoles;
+    // Modal buttons
+    document.querySelector('.modal-close').textContent = t.close;
+    document.querySelectorAll('.modal-nav button')[0].textContent = t.prev;
+    document.querySelectorAll('.modal-nav button')[1].textContent = t.next;
+    // About close
+    document.querySelector('.about-close').textContent = t.close;
+    // Editing label
+    document.getElementById('editing-label').textContent = t.editor;
+    // data-en / data-es elements
+    document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang);
+    });
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModal(); closeAbout(); }
+    if (e.key === 'ArrowRight') navModal(1);
+    if (e.key === 'ArrowLeft') navModal(-1);
+  });
+
+  document.getElementById('modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+  document.getElementById('about-overlay').addEventListener('click', function(e) { if (e.target === this) closeAbout(); });
+
+  buildGrid(PUBLI, 'publi-grid');
+  if (CINE.length) buildGrid(CINE, 'cine-grid', true);
+</script>
+</body>
+</html>
